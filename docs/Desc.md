@@ -1,3 +1,16 @@
+Nama Kelompok : Newton
+Anggota :
+1. Muhammad Jibril Ibrahim - 0110224002
+2. Rohmatul Hidayat - 0110224015
+3. Achmad Muflih Alrasyid - 0110224162
+4. Muhammad Ridwan Karim - 0110224122
+5. Anwar Maulana - 0110224020
+
+Program Studi : Teknik Informatka
+Mata Kuliah : Natural language processing
+Dosen Pengampu : Muhammad Yazid Supriadi S.Kom, M.Kom
+Asisten Dosen/Lab : Romi Wahyudi
+
 Setiap kelompok memilih implementasi NLP pada domain tertentu, misalnya:
 
 ## Topik
