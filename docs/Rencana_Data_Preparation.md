@@ -1,6 +1,6 @@
 # Rencana Persiapan Data (Data Preparation)
 
-Dokumen ini berisi rencana dan kode untuk menggabungkan serta membersihkan dataset mentah (`datasetraw1.csv` dan `datasetraw2.csv`) sebelum masuk ke tahap *Feature Engineering*.
+Dokumen ini berisi rencana dan kode untuk menggabungkan serta membersihkan dataset mentah sebelum masuk ke tahap *Feature Engineering*.
 
 ## 📋 Tahapan Persiapan
 
