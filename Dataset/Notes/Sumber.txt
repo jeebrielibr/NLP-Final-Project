@@ -1,0 +1,7 @@
+Sumber datasets
+1. https://www.kaggle.com/datasets/yaemico/judionline
+2. https://www.kaggle.com/datasets/yaemico/deteksi-judi-online
+3. https://www.kaggle.com/datasets/kyyyy8/dataset-komentar-judi-online-di-youtube/data?select=dataset_komentar_all.csv
+4. https://www.kaggle.com/datasets/fahruu/komentar-judi-online/data
+5. https://www.kaggle.com/datasets/kyyyy8/dataset-komentar-judi-online-platform-youtube
+6. https://www.kaggle.com/datasets/alexandrokalindra/dataset-scraping-komentar-judi-online
