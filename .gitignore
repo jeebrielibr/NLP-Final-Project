@@ -1,6 +1,13 @@
+# Model artifacts (large files, trained on Colab)
+IndoBERT_judol_model
+indobert_judol_model
+indobert_judol_model_focal
+model/indobert_judol_model/
+model/indobert_judol_model_focal/
+
+# AI tool configs
 GEMINI.md
 QWEN.md
-Indobert_judol_model
 CLAUDE.md
 .claude
 .qwen

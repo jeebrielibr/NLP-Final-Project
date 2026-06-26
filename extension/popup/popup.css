@@ -1,0 +1,229 @@
+/* Popup UI styling */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #1a1a2e;
+  color: #eee;
+  width: 280px;
+}
+
+.container {
+  padding: 16px;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+header h1 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 2px;
+}
+
+.subtitle {
+  font-size: 11px;
+  color: #aaa;
+}
+
+.section {
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  background: #16213e;
+  border-radius: 8px;
+}
+
+.section h2 {
+  font-size: 12px;
+  font-weight: 600;
+  color: #ccc;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+/* Toggle switch */
+.toggle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.toggle-row label {
+  font-size: 13px;
+  color: #eee;
+}
+
+.toggle-switch {
+  appearance: none;
+  width: 44px;
+  height: 22px;
+  background: #444;
+  border-radius: 22px;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.2s;
+}
+
+.toggle-switch::before {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.2s;
+}
+
+.toggle-switch:checked {
+  background: #4caf50;
+}
+
+.toggle-switch:checked::before {
+  transform: translateX(22px);
+}
+
+/* Mode selection */
+.mode-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mode-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  background: #0f3460;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.mode-option:hover {
+  background: #1a4a7a;
+}
+
+.mode-option input[type="radio"] {
+  accent-color: #4caf50;
+  width: 14px;
+  height: 14px;
+}
+
+.mode-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #eee;
+}
+
+.mode-icon {
+  font-size: 14px;
+}
+
+.mode-desc {
+  font-size: 10px;
+  color: #888;
+  margin-left: auto;
+}
+
+/* Threshold slider */
+.threshold-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.threshold-row input[type="range"] {
+  flex: 1;
+  accent-color: #4caf50;
+  height: 4px;
+}
+
+#threshold-value {
+  font-size: 13px;
+  font-weight: 700;
+  color: #4caf50;
+  min-width: 32px;
+  text-align: right;
+}
+
+.threshold-hint {
+  font-size: 10px;
+  color: #888;
+  margin-top: 4px;
+}
+
+/* API status */
+.status-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #888;
+  display: inline-block;
+}
+
+.status-dot.available {
+  background: #4caf50;
+}
+
+.status-dot.unavailable {
+  background: #e53935;
+}
+
+#api-status-text {
+  font-size: 12px;
+  color: #ccc;
+}
+
+/* Stats */
+.stats-grid {
+  display: flex;
+  gap: 12px;
+}
+
+.stat-item {
+  flex: 1;
+  text-align: center;
+  padding: 8px;
+  background: #0f3460;
+  border-radius: 6px;
+}
+
+.stat-number {
+  display: block;
+  font-size: 20px;
+  font-weight: 700;
+  color: #e53935;
+}
+
+.stat-label {
+  font-size: 10px;
+  color: #888;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  margin-top: 8px;
+}
+
+.version {
+  font-size: 10px;
+  color: #666;
+}
