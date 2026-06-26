@@ -1,63 +1,38 @@
 /**
- * Service Worker — handles HF Inference API calls and message routing.
- * Uses HuggingFace Inference API to classify comments with IndoBERT Focal model.
+ * Service Worker — handles Space API calls and message routing.
+ * Uses custom Space API (FastAPI) to classify comments with IndoBERT Focal model.
  */
 
-const HF_API_URL = 'https://api-inference.huggingface.co/models/';
-// Replace with your actual HF model repo path after deployment
-const HF_MODEL_ID = '<YOUR_HF_USERNAME>/indobert-judol-focal';
-const API_TIMEOUT_MS = 10000;
+// Ganti URL Inference API dengan URL Space Anda
+const API_URL = 'https://brielibr-indobert-judol-api.hf.space/predict';
+const API_TIMEOUT_MS = 45000; // 45 detik timeout untuk permintaan API
 const BATCH_SIZE = 5;
 
 let apiAvailable = true;
 
-/**
- * Classify a single comment text via HF Inference API.
- * Returns { label: 'judol'|'bukan_judol', score: number }
- */
 async function classifySingle(text) {
   try {
-    const response = await fetch(HF_API_URL + HF_MODEL_ID, {
+    const response = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ inputs: text }),
+      // TIDAK ADA HEADER AUTHORIZATION LAGI!
+      body: JSON.stringify({ text: text }), 
       signal: AbortSignal.timeout(API_TIMEOUT_MS),
     });
 
-    if (!response.ok) {
-      const errBody = await response.text();
-      console.error('HF API error:', response.status, errBody);
-      apiAvailable = false;
-      return { label: 'bukan_judol', score: 0, error: true };
-    }
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
-    const result = await response.json();
+    // Format respons sudah disesuaikan oleh FastAPI kita
+    const result = await response.json(); 
+    
+    apiAvailable = true;
+    return { 
+        label: result.label,       // Langsung 'judol' atau 'bukan_judol'
+        score: result.score 
+    };
 
-    // HF Inference API returns array of label-score pairs
-    // e.g. [{ label: 'LABEL_1', score: 0.97 }, { label: 'LABEL_0', score: 0.03 }]
-    if (Array.isArray(result) && result.length > 0) {
-      // Find the highest-score prediction
-      const topPred = result.reduce((a, b) => a.score > b.score ? a : b);
-      const label = topPred.label === 'LABEL_1' ? 'judol' : 'bukan_judol';
-      apiAvailable = true;
-      return { label, score: topPred.score };
-    }
-
-    // Some models return a single object
-    if (result.label && result.score) {
-      const label = result.label === 'LABEL_1' ? 'judol' : 'bukan_judol';
-      apiAvailable = true;
-      return { label, score: result.score };
-    }
-
-    console.error('Unexpected API response format:', result);
-    return { label: 'bukan_judol', score: 0, error: true };
   } catch (err) {
-    if (err.name === 'AbortError') {
-      console.error('HF API request timed out');
-    } else {
-      console.error('HF API request failed:', err);
-    }
+    console.error('API Error:', err);
     apiAvailable = false;
     return { label: 'bukan_judol', score: 0, error: true };
   }
@@ -88,14 +63,14 @@ async function classifyBatch(commentMap) {
 }
 
 /**
- * Check if the HF API is reachable (lightweight probe).
+ * Check if the API is reachable (lightweight probe).
  */
 async function checkApiHealth() {
   try {
-    const response = await fetch(HF_API_URL + HF_MODEL_ID, {
+    const response = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ inputs: 'test' }),
+      body: JSON.stringify({ text: 'test' }),
       signal: AbortSignal.timeout(5000),
     });
     apiAvailable = response.ok;
