@@ -82,47 +82,78 @@ function extractCommentText(el) {
 
 // --- Classification pipeline ---
 
+/** Snapshot of the batch currently being processed (for re-queue on error). */
+let currentBatch = {};
+
 /**
- * Process a batch of queued comments.
+ * Listen for individual classification results sent by the service worker
+ * via chrome.tabs.sendMessage (avoids long-lived sendResponse channels).
  */
-async function processQueue() {
-  if (pendingQueue.size === 0) return;
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.type === 'CLASSIFY_RESULT') {
+    const { id, result } = message;
 
-  const batch = {};
-  for (const [id, text] of pendingQueue) {
-    batch[id] = text;
-  }
-  pendingQueue.clear();
+    classificationCache.set(id, result);
+    processedComments.add(id);
+    sessionTotalCount++;
 
-  try {
-    const results = await chrome.runtime.sendMessage({
-      type: 'CLASSIFY_BATCH',
-      data: batch,
-    });
-
-    for (const [id, result] of Object.entries(results)) {
-      classificationCache.set(id, result);
-      processedComments.add(id);
-      sessionTotalCount++;
-
-      if (!result.error && result.label === 'judol' && result.score >= settings.threshold) {
-        sessionJudolCount++;
-      }
-
-      applyAction(id, result);
+    if (!result.error && result.label === 'judol' && result.score >= settings.threshold) {
+      sessionJudolCount++;
     }
+
+    applyAction(id, result);
+
+    // Remove from currentBatch so it won't be re-queued on failure
+    delete currentBatch[id];
 
     // Report stats to background
     chrome.runtime.sendMessage({
       type: 'UPDATE_STATS',
       data: { judolCount: sessionJudolCount, totalCount: sessionTotalCount },
     });
-  } catch (err) {
-    console.error('Classification batch failed:', err);
-    // Re-queue failed items for next attempt
-    for (const [id, text] of Object.entries(batch)) {
+  }
+
+  if (message.type === 'CLASSIFY_BATCH_DONE') {
+    // Any remaining items in currentBatch failed (tab disconnect, etc.)
+    for (const [id, text] of Object.entries(currentBatch)) {
       pendingQueue.set(id, text);
     }
+    currentBatch = {};
+
+    // If there are re-queued items, schedule a retry
+    if (pendingQueue.size > 0) {
+      scheduleProcessing();
+    }
+  }
+});
+
+/**
+ * Process a batch of queued comments.
+ * Sends the batch to the service worker and receives results
+ * individually via chrome.tabs.sendMessage (see listener above).
+ */
+async function processQueue() {
+  if (pendingQueue.size === 0) return;
+
+  // Snapshot current queue as the batch being processed
+  currentBatch = {};
+  for (const [id, text] of pendingQueue) {
+    currentBatch[id] = text;
+  }
+  pendingQueue.clear();
+
+  try {
+    chrome.runtime.sendMessage({
+      type: 'CLASSIFY_BATCH',
+      data: currentBatch,
+    });
+  } catch (err) {
+    console.error('Failed to send batch to service worker:', err);
+    // Re-queue everything
+    for (const [id, text] of Object.entries(currentBatch)) {
+      pendingQueue.set(id, text);
+    }
+    currentBatch = {};
   }
 }
 

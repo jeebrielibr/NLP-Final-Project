@@ -8,4 +8,6 @@ graphify-out
 
 # Model files (Terlalu besar untuk GitHub)
 Notebook/indobert_judol_model
+Notebook/indobert_judol_model_focal
 model/indobert_judol_model/model.safetensors
+model/indobert_judol_model_focal/model.safetensors
