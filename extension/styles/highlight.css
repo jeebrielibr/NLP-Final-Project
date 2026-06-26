@@ -1,0 +1,59 @@
+/* Highlight & Hide styles for judol comments — injected into YouTube pages */
+
+/* === HIGHLIGHT MODE === */
+.ytd-comment-thread-renderer.judol-highlight {
+  border-left: 4px solid #e53935;
+  background-color: rgba(229, 57, 53, 0.08);
+  padding-left: 8px;
+  margin-left: -4px;
+  border-radius: 4px;
+}
+
+/* Badge overlay showing label + confidence */
+.judol-badge {
+  display: inline-block;
+  background-color: #e53935;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-right: 8px;
+  letter-spacing: 0.3px;
+  vertical-align: middle;
+  line-height: 1.6;
+}
+
+/* === HIDE MODE === */
+.ytd-comment-thread-renderer.judol-hide {
+  display: none !important;
+}
+
+/* Placeholder for hidden comments (optional — uncomment if desired) */
+/*
+.ytd-comment-thread-renderer.judol-hide-placeholder {
+  display: block;
+  padding: 8px 16px;
+  color: #888;
+  font-size: 12px;
+  background: #f5f5f5;
+  border-left: 3px solid #e53935;
+  cursor: pointer;
+}
+
+.ytd-comment-thread-renderer.judol-hide-placeholder:hover {
+  background: #eee;
+}
+*/
+
+/* === Dark mode support === */
+/* YouTube uses [dark] attribute on the body for dark theme */
+[dark] .ytd-comment-thread-renderer.judol-highlight {
+  background-color: rgba(229, 57, 53, 0.15);
+  border-left-color: #ff6b6b;
+}
+
+[dark] .judol-badge {
+  background-color: #ff6b6b;
+  color: #111;
+}

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>YouTube Judol Comment Remover</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🛡️ Judol Remover</h1>
+      <p class="subtitle">Deteksi komentar judi online di YouTube</p>
+    </header>
+
+    <!-- Master enable/disable -->
+    <section class="section">
+      <div class="toggle-row">
+        <label for="enabled">Aktifkan Ekstensi</label>
+        <input type="checkbox" id="enabled" class="toggle-switch">
+      </div>
+    </section>
+
+    <!-- Mode selection -->
+    <section class="section">
+      <h2>Mode Tampilan</h2>
+      <div class="mode-group">
+        <label class="mode-option">
+          <input type="radio" name="mode" value="highlight" id="mode-highlight">
+          <span class="mode-label">
+            <span class="mode-icon">🔍</span> Highlight
+          </span>
+          <span class="mode-desc">Tandai komentar judol dengan border + label</span>
+        </label>
+        <label class="mode-option">
+          <input type="radio" name="mode" value="hide" id="mode-hide">
+          <span class="mode-label">
+            <span class="mode-icon">👁️‍🗨️</span> Hide
+          </span>
+          <span class="mode-desc">Sembunyikan komentar judol sepenuhnya</span>
+        </label>
+      </div>
+    </section>
+
+    <!-- Threshold -->
+    <section class="section">
+      <h2>Confidence Threshold</h2>
+      <div class="threshold-row">
+        <input type="range" id="threshold" min="0.50" max="0.95" step="0.05" value="0.70">
+        <span id="threshold-value">0.70</span>
+      </div>
+      <p class="threshold-hint">Semakin tinggi = hanya prediksi yang lebih pasti ditandai</p>
+    </section>
+
+    <!-- API Status -->
+    <section class="section">
+      <div class="status-row">
+        <span class="status-dot" id="api-status-dot"></span>
+        <span id="api-status-text">Memeriksa API...</span>
+      </div>
+    </section>
+
+    <!-- Session Stats -->
+    <section class="section stats">
+      <h2>Statistik Sesi</h2>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span class="stat-number" id="judol-count">0</span>
+          <span class="stat-label">Judol Terdeteksi</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" id="total-count">0</span>
+          <span class="stat-label">Total Diperiksa</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <p class="version">v1.0.0 · Kelompok Newton · NLP Final Project</p>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
