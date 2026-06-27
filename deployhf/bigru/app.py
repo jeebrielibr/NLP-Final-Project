@@ -4,6 +4,10 @@ from pydantic import BaseModel
 import torch
 import torch.nn as nn
 import re
+import unicodedata
+import emoji
+import saka
+import gradio as gr
 
 app = FastAPI(title="BiGRU Judol API")
 
@@ -35,8 +39,35 @@ class BiGRUClassifier(nn.Module):
         return self.fc(self.dropout(hidden_concat))
 
 
-# --- Preprocessing (from Notebook/GRU_model.ipynb) ---
+# --- Preprocessing (2-layer pipeline: AdvancedPreprocessing + GRU_model clean_text) ---
+
+def advanced_preprocessing(text):
+    """Layer 1: AdvancedPreprocessing.ipynb — applied BEFORE GRU_model training"""
+    if not isinstance(text, str):
+        return ""
+    # 1. Emoji to Text (Demojize) — harus paling awal
+    text = emoji.demojize(text, delimiters=(" ", " "))
+    # 2. Unicode Normalization (Bold/Italic → Normal) + drop non-ASCII
+    text = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('utf-8')
+    # 3. URL Masking
+    text = re.sub(r'http\S+|www\S+|https\S+', '[URL]', text)
+    text = re.sub(r'bit\s?[\.\,]\s?ly/\w+', '[URL]', text)
+    text = re.sub(r'\w+\s?\[dot\]\s?\w+', '[URL]', text)
+    # 4. Lowercase
+    text = text.lower()
+    # 5. Keep alphanumeric, [URL], and _: (demojize uses underscore)
+    text = re.sub(r'[^a-zA-Z0-9\s\[\]\_:]', ' ', text)
+    # 6. Indonesian slang normalization
+    text = saka.normalize(text)
+    # 7. Reduce repeated chars
+    text = re.sub(r'(.)\1{2,}', r'\1\1', text)
+    # 8. Final whitespace
+    text = re.sub(r'\s+', ' ', text).strip()
+    return text
+
+
 def clean_text(text, slang_map):
+    """Layer 2: GRU_model.ipynb clean_text — applied right before model input"""
     if not isinstance(text, str):
         return ""
     text = text.lower()
@@ -45,6 +76,11 @@ def clean_text(text, slang_map):
     words = text.split()
     normalized_words = [slang_map.get(word, word) for word in words]
     return " ".join(normalized_words)
+
+
+def full_preprocessing(text, slang_map):
+    """Full 2-layer preprocessing matching training pipeline"""
+    return clean_text(advanced_preprocessing(text), slang_map)
 
 
 def text_to_sequence(text, vocab, max_len):
@@ -80,7 +116,7 @@ class CommentRequest(BaseModel):
 
 @app.post("/predict")
 def predict_comment(req: CommentRequest):
-    cleaned = clean_text(req.text, SLANG_JUDOL_MAP)
+    cleaned = full_preprocessing(req.text, SLANG_JUDOL_MAP)
     seq = text_to_sequence(cleaned, vocab, MAX_LEN)
     tensor_input = torch.tensor([seq], dtype=torch.long)
     with torch.no_grad():
@@ -89,6 +125,90 @@ def predict_comment(req: CommentRequest):
     return {"label": label, "score": score}
 
 
-@app.get("/")
-def health_check():
+@app.get("/api_health")
+def api_health():
     return {"status": "API BiGRU Judol is running!"}
+
+
+# --- Gradio UI ---
+def predict_comment_ui(text):
+    """For Gradio UI"""
+    cleaned = full_preprocessing(text, SLANG_JUDOL_MAP)
+    seq = text_to_sequence(cleaned, vocab, MAX_LEN)
+    tensor_input = torch.tensor([seq], dtype=torch.long)
+    with torch.no_grad():
+        score = torch.sigmoid(model(tensor_input)).item()
+    label = "judol" if score >= 0.5 else "bukan_judol"
+    confidence = score if label == "judol" else 1 - score
+
+    if label == "judol":
+        emoji = "🚨"
+        color = "red"
+    else:
+        emoji = "✅"
+        color = "green"
+
+    return (
+        f"### {emoji} Hasil Deteksi\n\n"
+        f"**Label:** <span style='color:{color};font-weight:bold'>{label.upper()}</span>\n\n"
+        f"**Confidence:** {confidence * 100:.1f}%\n\n"
+        f"---\n"
+        f"**Teks asli:** _{text}_\n"
+        f"**Teks bersih:** _{cleaned}_"
+    )
+
+
+with gr.Blocks(
+    title="Deteksi Judol Comment - BiGRU",
+    theme=gr.themes.Soft(),
+    css="""
+    .judol-header { text-align: center; margin-bottom: 1em; }
+    .footer { text-align: center; font-size: 0.8em; color: #888; margin-top: 2em; }
+    """
+) as demo:
+    gr.Markdown(
+        "# 🎯 Deteksi Komentar Judol YouTube\n"
+        "Masukkan komentar YouTube untuk mendeteksi apakah mengandung **judol (judi online)** atau tidak.",
+        elem_classes="judol-header"
+    )
+
+    with gr.Row():
+        with gr.Column(scale=1):
+            text_input = gr.Textbox(
+                label="Komentar",
+                placeholder="Contoh: gacor maxwin hari ini langsung cair...",
+                lines=5
+            )
+            predict_btn = gr.Button("🔍 Deteksi", variant="primary", size="lg")
+            gr.Examples(
+                examples=[
+                    "gacor maxwin hari ini langsung cair",
+                    "video nya bagus banget kak, lanjutkan",
+                    "daftar sekarang juga dapat bonus new member 100%",
+                    "mantap kontennya sangat bermanfaat",
+                    "link slot gacor ada di bio",
+                ],
+                inputs=text_input,
+                label="Contoh komentar (klik untuk mencoba)",
+            )
+
+        with gr.Column(scale=1):
+            output = gr.Markdown(
+                value="### 👈 Masukkan komentar lalu klik **Deteksi**",
+            )
+
+    predict_btn.click(
+        fn=predict_comment_ui,
+        inputs=text_input,
+        outputs=output,
+    )
+
+    gr.Markdown(
+        "---\n"
+        "🔌 **API**: Gunakan endpoint `POST /predict` dengan JSON `{\"text\": \"...\"}`\n\n"
+        "*Model: BiGRU • NLP Final Project*",
+        elem_classes="footer"
+    )
+
+# Mount Gradio on root, FastAPI endpoints remain accessible
+app = gr.mount_gradio_app(app, demo, path="/")
