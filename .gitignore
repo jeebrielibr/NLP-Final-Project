@@ -1,10 +1,10 @@
 # AI tool configs
 GEMINI.md
 QWEN.md
-CLAUDE.md
-.claude
 .qwen
+.agents
 graphify-out
+skills-lock.json
 
 # Model files (Terlalu besar untuk GitHub)
 Notebook/indobert_judol_model
