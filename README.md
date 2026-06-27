@@ -1,288 +1,328 @@
-# YouTube Judol Comment Remover
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.10+" />
+  <img src="https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white" alt="PyTorch" />
+  <img src="https://img.shields.io/badge/TensorFlow-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white" alt="TensorFlow" />
+  <img src="https://img.shields.io/badge/HuggingFace-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black" alt="HuggingFace" />
+  <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" />
+  <img src="https://img.shields.io/badge/Chrome%20Extension-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Chrome Extension" />
+  <br />
+  <img src="https://img.shields.io/badge/status-active-2ea44f?style=for-the-badge" alt="Status: Active" />
+  <img src="https://img.shields.io/badge/license-academic-lightgrey?style=for-the-badge" alt="License: Academic" />
+  <img src="https://img.shields.io/badge/NLP-Text%20Classification-8A2BE2?style=for-the-badge" alt="NLP: Text Classification" />
+</p>
 
-Ekstensi browser berbasis NLP untuk **mendeteksi**, **menyembunyikan**, dan **menyorot** komentar judi online (*judol*) di YouTube — proyek final mata kuliah Natural Language Processing.
+<h1 align="center">🎯 YouTube Judol Comment Remover</h1>
+
+<p align="center">
+  <em>Ekstensi browser berbasis NLP untuk mendeteksi, menyembunyikan, dan menyorot komentar judi online (judol) di YouTube</em>
+  <br />
+  <strong>— Proyek Final Mata Kuliah Natural Language Processing —</strong>
+</p>
 
 ---
 
-## Informasi Proyek
+## 📋 Daftar Isi
 
-| Item | Keterangan |
-|------|------------|
-| **Kelompok** | Newton |
-| **Program Studi** | Teknik Informatika |
-| **Mata Kuliah** | Natural Language Processing |
-| **Dosen Pengampu** | Muhammad Yazid Supriadi S.Kom, M.Kom |
-| **Asisten Dosen/Lab** | Romi Wahyudi |
-| **Domain** | Sosial Media |
-| **Jenis Aplikasi** | Text Classification + Browser Extension |
-| **Bahasa** | Indonesia |
+- [Informasi Proyek](#-informasi-proyek)
+- [Latar Belakang](#-latar-belakang)
+- [Fitur](#-fitur)
+- [Arsitektur Sistem](#-arsitektur-sistem)
+- [Pipeline NLP](#-pipeline-nlp)
+- [Model & Hasil Evaluasi](#-model--hasil-evaluasi)
+- [Dataset](#-dataset)
+- [Tech Stack](#-tech-stack)
+- [Deployment](#-deployment)
+- [Struktur Repository](#-struktur-repository)
+- [Dokumentasi](#-dokumentasi)
+- [Deliverables](#-deliverables)
+
+---
+
+## 👥 Informasi Proyek
+
+<table>
+<tr>
+  <td><strong>Kelompok</strong></td>
+  <td>Newton</td>
+  <td><strong>Domain</strong></td>
+  <td>Sosial Media (YouTube)</td>
+</tr>
+<tr>
+  <td><strong>Program Studi</strong></td>
+  <td>Teknik Informatika</td>
+  <td><strong>Jenis Aplikasi</strong></td>
+  <td>Text Classification + Browser Extension</td>
+</tr>
+<tr>
+  <td><strong>Mata Kuliah</strong></td>
+  <td>Natural Language Processing</td>
+  <td><strong>Bahasa</strong></td>
+  <td>Indonesia</td>
+</tr>
+<tr>
+  <td><strong>Dosen Pengampu</strong></td>
+  <td colspan="3">Muhammad Yazid Supriadi S.Kom, M.Kom</td>
+</tr>
+<tr>
+  <td><strong>Asisten Dosen/Lab</strong></td>
+  <td colspan="3">Romi Wahyudi</td>
+</tr>
+</table>
 
 ### Anggota Kelompok
 
-| No | Nama | NIM |
-|----|------|-----|
-| 1 | Muhammad Jibril Ibrahim | 0110224002 |
-| 2 | Rohmatul Hidayat | 0110224015 |
-| 3 | Achmad Muflih Alrasyid | 0110224162 |
-| 4 | Muhammad Ridwan Karim | 0110224122 |
-| 5 | Anwar Maulana | 0110224020 |
+| Nama | NIM |
+|------|:---:|
+| Muhammad Jibril Ibrahim | 0110224002 |
+| Rohmatul Hidayat | 0110224015 |
+| Achmad Muflih Alrasyid | 0110224162 |
+| Muhammad Ridwan Karim | 0110224122 |
+| Anwar Maulana | 0110224020 |
 
 ---
 
-## Latar Belakang
+## 🧠 Latar Belakang
 
-Komentar judi online (*judol*) di YouTube semakin marak — sering berupa promosi situs judi, link referral, atau ajakan bermain dengan iming-iming keuntungan cepat. Konten ini mengganggu pengalaman menonton, berpotensi menyesatkan penonton (terutama remaja), dan sulit diblokir secara manual karena muncul dalam variasi teks yang terus berubah.
+Komentar judi online (*judol*) di YouTube semakin marak — promosi situs judi, link referral, ajakan bermain dengan iming-iming keuntungan cepat. Konten ini mengganggu pengalaman menonton, berpotensi menyesatkan (terutama remaja), dan sulit diblokir manual karena terus berganti variasi teks.
 
-**Masalah yang diselesaikan:**
-
-- Pengguna YouTube kesulitan memfilter komentar judol secara manual
-- Pola teks judol bervariasi (slang, typo, emoji, link tersembunyi)
+**Masalah:**
+- Pengguna kesulitan memfilter komentar judol secara manual
+- Pola teks judol bervariasi (slang, typo, emoji, link tersembunyi, nama situs tersamar)
 - Moderasi platform tidak selalu cukup cepat atau konsisten
 
-**Solusi:** Ekstensi browser yang secara otomatis mendeteksi komentar judol menggunakan model NLP berbahasa Indonesia, lalu menyembunyikan atau menyorot komentar tersebut agar pengguna dapat membuktikan bahwa sistem bekerja.
+**Solusi:** Ekstensi browser yang mendeteksi komentar judol secara otomatis menggunakan model NLP berbahasa Indonesia, lalu menyembunyikan atau menyorotnya.
 
 ---
 
-## Fitur Utama
+## ✨ Fitur
 
 ### Model NLP
+| Fitur | Detail |
+|-------|--------|
+| **Task** | Klasifikasi biner: `judol` vs `bukan_judol` |
+| **Model** | BiGRU (PyTorch), LSTM (TensorFlow), **IndoBERT + Focal Loss** (HuggingFace) |
+| **Preprocessing** | Emoji → teks, Unicode NFKD, URL masking, slang normalisasi (saka-nlp), reduksi repetisi |
+| **Evaluasi** | Accuracy, precision, recall, F1-score, confusion matrix, ROC-AUC, error analysis |
 
-- Klasifikasi biner: `judol` vs `bukan_judol`
-- Tiga model dilatih: **BiGRU** (PyTorch), **LSTM** (TensorFlow), **IndoBERT + Focal Loss** (HuggingFace)
-- Preprocessing teks Indonesia informal: emoji → teks, normalisasi Unicode (bold/italic), masking URL, normalisasi slang (saka-nlp), reduksi repetisi karakter
-- Evaluasi: accuracy, precision, recall, F1-score, confusion matrix, ROC-AUC
+### Ekstensi Browser (Chrome/Edge — Manifest V3)
 
-### Ekstensi Browser (Chrome/Edge)
-
-| Fitur | Deskripsi |
-|-------|-----------|
-| **Hide** | Menyembunyikan komentar terdeteksi judol |
-| **Highlight** | Menyorot komentar dengan border + label confidence |
-| Toggle mode | Pengguna memilih hide atau highlight |
-| Threshold confidence | Filter prediksi dengan skor minimum (0,50–0,95) |
-| Statistik sesi | Jumlah komentar terdeteksi per halaman video |
-| Enable / disable | Master switch tanpa uninstall |
-| API status | Indikator ketersediaan API di popup |
+| Fitur | Detail |
+|-------|--------|
+| **Hide** | Sembunyikan komentar yang terdeteksi judol |
+| **Highlight** | Sorot komentar dengan border + label confidence |
+| **Toggle Mode** | Pilih hide atau highlight |
+| **Threshold** | Filter prediksi (0,50–0,95) |
+| **Statistik Sesi** | Jumlah komentar terdeteksi per halaman |
+| **Master Switch** | Enable/disable tanpa uninstall |
+| **API Status** | Indikator ketersediaan API di popup |
 
 ---
 
-## Arsitektur Sistem
+## 🏗️ Arsitektur Sistem
 
 ```
-[Komentar YouTube] --> [Content Script] --> [Preprocessing JS] --> [Service Worker]
-                         │                                            │
-                         │ DOM observer +                         fetch POST /predict
-                         │ batch queue                              (HF Spaces API)
-                         │                                            │
-                         └──────────── [Action: Hide/Highlight] ←───┘
+┌─────────────┐     ┌──────────────────┐     ┌──────────────────────┐
+│ YouTube DOM │────>│  Content Script   │────>│   Service Worker     │
+│  comments   │     │  (youtube.js)     │     │  (background.js)     │
+└─────────────┘     │  + preprocess.js  │     └──────────┬───────────┘
+        ▲           └──────────────────┘                │ POST /predict
+        │                                                ▼
+        │                                         ┌──────────────┐
+        └─────────────────────────────────────────│ HF Spaces API │
+                Hide / Highlight action            │  (FastAPI)    │
+                                                  └──────────────┘
 ```
 
-### Alur Runtime (saat pengguna membuka YouTube)
-
-1. Content script (`youtube.js`) memindai komentar via `MutationObserver` pada `ytd-comment-thread-renderer`
-2. Teks komentar dipreprocess di sisi klien (`preprocess.js`) — mirror pipeline Python
+**Alur Runtime:**
+1. `youtube.js` memindai komentar via `MutationObserver` pada `ytd-comment-thread-renderer`
+2. Teks dipreprocess di klien (`preprocess.js`) — mirror pipeline Python
 3. Komentar dikirim batch ke service worker → POST ke Hugging Face Space API
-4. API menjalankan inferensi IndoBERT → mengembalikan `{label, score}`
-5. Content script menerapkan aksi sesuai pengaturan: **Hide** atau **Highlight** + badge
-
-### Alur Offline (pelatihan model)
-
-1. **Fetch data** — 6 dataset dari Kaggle (komentar judi online YouTube)
-2. **Preprocessing** — emoji demojize, Unicode NFKD, URL masking, saka-nlp slang normalization
-3. **Labeling** — anotasi: `0` (bukan_judol) / `1` (judol)
-4. **Training** — BiGRU + LSTM (baseline) + IndoBERT fine-tune dengan Focal Loss
-5. **Evaluasi** — classification report, confusion matrix, error analysis (FP/FN)
-6. **Export** — model disimpan ke `model/`, API di-deploy ke Hugging Face Spaces
+4. API menjalankan inferensi IndoBERT → `{label, score}`
+5. Content script menerapkan **Hide** atau **Highlight** sesuai pengaturan
 
 ---
 
-## Pipeline NLP
+## 🔧 Pipeline NLP
 
-Pipeline preprocessing diterapkan secara identik di Python (training) dan JavaScript (runtime ekstensi):
+Pipeline identik di Python (training) dan JavaScript (runtime ekstensi):
 
-| Langkah | Keterangan |
-|---------|-----------|
-| **Emoji conversion** | `emoji.demojize()` → teks (mis. 🥺 → `pleading_face`) |
-| **Unicode normalization** | NFKD — bold/italic/fractur → normal ASCII |
-| **URL masking** | URL, bit.ly, `[dot]` obfuscation → `[URL]` |
-| **Lowercasing** | Standarisasi huruf |
-| **Symbol cleaning** | Hanya alfanumerik + `[URL]` + underscore/colon |
-| **Slang normalization** | saka-nlp + kamus judol kustom (mis. "wd" → "withdraw", "depo" → "deposit") |
-| **Char repetition** | "bngettt" → "bngett" (3+ → 2) |
-| **Whitespace cleanup** | Normalisasi spasi |
+```mermaid
+flowchart LR
+    A[Input Text] --> B[Emoji → Teks]
+    B --> C[Unicode NFKD]
+    C --> D[URL Masking]
+    D --> E[Lowercasing]
+    E --> F[Symbol Cleaning]
+    F --> G[Slang Normalisasi]
+    G --> H[Repetisi Reduksi]
+    H --> I[Whitespace Cleanup]
+    I --> J[Tokenization → Model]
+```
+
+| Langkah | Contoh Input | Output |
+|---------|-------------|--------|
+| **Emoji** | 🥺 | `pleading_face` |
+| **Unicode** | 𝘀𝗶𝘁𝘂𝘀 | `situs` |
+| **URL** | `bit.ly/judi` | `[URL]` |
+| **Slang** | `wd`, `depo` | `withdraw`, `deposit` |
+| **Repetisi** | `bngettt` | `bngett` |
 
 ---
 
-## Model & Hasil Evaluasi
+## 📊 Model & Hasil Evaluasi
 
-Tiga model dilatih pada dataset yang sama (70.379 baris). Detail lengkap ada di [Laporan Evaluasi Model](Docs/Laporan_Evaluasi_Model.md).
+Tiga model dilatih pada **70.379 komentar** berbahasa Indonesia. Detail lengkap di [Laporan Evaluasi Model](Docs/Laporan_Evaluasi_Model.md).
 
 ### Ringkasan Metrik
 
-| Metrik | BiGRU | LSTM | IndoBERT-focal |
-|--------|:-----:|:----:|:--------------:|
-| **Accuracy** | 99,23% | 99% | 52% |
-| **Judol Precision** | 0,97 | 0,93 | 0,14 |
-| **Judol Recall** | 0,96 | 0,97 | 0,62 |
-| **Judol F1-Score** | 0,97 | 0,95 | 0,23 |
-| **False Positive** | 49 | 119 | 6.169 |
-| **False Negative** | 65 | 49 | 614 |
+| Metrik | BiGRU | LSTM | 🏆 IndoBERT-focal |
+|--------|:-----:|:----:|:-----------------:|
+| **Accuracy** | 99,23% | 99% | **99,64%** |
+| **Judol Precision** | 0,97 | 0,93 | **0,99** |
+| **Judol Recall** | 0,96 | 0,97 | **0,98** |
+| **Judol F1-Score** | 0,97 | 0,95 | **0,98** |
+| **False Positive** | 49 | 119 | **23** |
+| **False Negative** | 65 | 49 | **28** |
 | **ROC-AUC** | — | 0,9953 | — |
 
-### Karakteristik Model
+### Perbandingan Arsitektur
 
 | Aspek | BiGRU | LSTM | IndoBERT-focal |
-|-------|-------|------|----------------|
+|-------|:-----:|:----:|:--------------:|
 | **Jenis** | RNN (GRU) | RNN (LSTM) | Transformer (BERT) |
 | **Framework** | PyTorch | TensorFlow/Keras | HuggingFace Transformers |
-| **Pre-trained** | Tidak | Tidak | indobert-base-p1 |
-| **Tokenisasi** | Word-level | Word-level | Subword (WordPiece) |
-| **Split** | 80/20 | 70/15/15 | 80/20 |
-| **Penanganan Imbalance** | — | Class Weights | Focal Loss (α=7,61, γ=2,0) |
+| **Pre-trained** | ❌ (from scratch) | ❌ (from scratch) | ✅ indobert-base-p1 |
+| **Tokenisasi** | Word-level (23K vocab) | Word-level (15K vocab) | Subword WordPiece (32K) |
+| **Imbalance** | — | Class Weights | Focal Loss (α=7,61, γ=2,0) |
+| **Epochs** | 5 | 6 (early stop) | 5 |
 
-**Kesimpulan:** BiGRU menjadi model terbaik dengan accuracy 99,23% dan Judol F1 0,97. IndoBERT-focal mengalami kegagalan generalisasi (training loss 0,0195 namun test accuracy 52%) akibat Focal Loss yang terlalu agresif.
+### Insight Utama
+
+> 🥇 **IndoBERT-focal adalah model terbaik** — accuracy 99,64%, **hanya 23 FP & 28 FN** dari 14.076 sampel uji. Analisis error menunjukkan sebagian besar kesalahan adalah *noise label dataset*, bukan kelemahan model. Focal Loss dengan α=7,61 berhasil mengatasi ketidakseimbangan kelas (rasio ~7,6:1).
+
+> ⚡ **BiGRU alternatif ringan** — accuracy 99,23%, hanya 49 FP. Ukuran model jauh lebih kecil, cocok untuk inferensi *real-time* di lingkungan dengan resource terbatas (side-loading di extension).
+
+> 📈 **LSTM recall tertinggi** (0,97) dengan ROC-AUC 0,9953 — menunjukkan diskriminasi kelas yang sangat baik.
 
 ---
 
-## Dataset
+## 📁 Dataset
 
-| Aspek | Detail |
-|-------|--------|
+| Metrik | Nilai |
+|--------|-------|
 | **Total baris** | 70.379 |
 | **Label 0 (Bukan Judol)** | 62.202 (88,4%) |
 | **Label 1 (Judol)** | 8.177 (11,6%) |
-| **Kolom** | `text`, `label` |
-| **Sumber** | 6 dataset Kaggle (lihat [Dataset/Notes/Sumber.txt](Dataset/Notes/Sumber.txt)) |
+| **Sumber** | 6 dataset Kaggle → [Sumber](Dataset/Notes/Sumber.txt) |
 
-**Karakteristik judol:** nama situs tersamar (`alexis17`, `pulauwin`, `sgi88`), kata promosi (`depo`, `wd`, `gacor`, `maxwin`), emoji tertentu (`red_heart`, `fire`, `star`).
+**Ciri khas komentar judol:** nama situs tersamar (`alexis17`, `pulauwin`, `sgi88`), kata promosi (`depo`, `wd`, `gacor`, `maxwin`, `cuan`), emoji tertentu (`❤️`, `🔥`, `⭐`).
 
 ---
 
-## Tech Stack
+## 🛠️ Tech Stack
 
 | Lapisan | Teknologi |
 |---------|-----------|
-| **Training** | Python 3.10+, PyTorch, TensorFlow/Keras, HuggingFace Transformers |
-| **Data & evaluasi** | pandas, scikit-learn, matplotlib, seaborn, saka-nlp |
-| **Deploy model** | Hugging Face Spaces (FastAPI + Docker) |
-| **Ekstensi** | Chrome Extension Manifest V3 (JavaScript) |
-| **Preprocessing JS** | Custom pipeline (emoji map, Unicode normalization, slang dictionary) |
+| **Training** | ![Python](https://img.shields.io/badge/-Python-3776AB?logo=python&logoColor=white) 3.10+, ![PyTorch](https://img.shields.io/badge/-PyTorch-EE4C2C?logo=pytorch&logoColor=white), ![TensorFlow](https://img.shields.io/badge/-TensorFlow-FF6F00?logo=tensorflow&logoColor=white), ![HuggingFace](https://img.shields.io/badge/-HuggingFace-FFD21E?logo=huggingface&logoColor=black) |
+| **Data & Evaluasi** | ![pandas](https://img.shields.io/badge/-pandas-150458?logo=pandas&logoColor=white), scikit-learn, matplotlib, seaborn, saka-nlp |
+| **Deploy API** | ![FastAPI](https://img.shields.io/badge/-FastAPI-009688?logo=fastapi&logoColor=white), ![Docker](https://img.shields.io/badge/-Docker-2496ED?logo=docker&logoColor=white), Hugging Face Spaces |
+| **Ekstensi** | Chrome Extension Manifest V3 (JavaScript), DOM MutationObserver |
+| **Preprocessing JS** | Custom pipeline (emoji map, Unicode NFKD, slang dictionary) |
 
 ---
 
-## Struktur Repository
-
-```
-NLP Final Project/
-├── Dataset/                     # Dataset mentah & terproses
-│   ├── datasetraw1–6.csv        # 6 dataset mentah dari Kaggle
-│   ├── dataset_prepared.csv     # Hasil merge (±70K baris)
-│   ├── dataset_clean_final.csv  # Dataset final siap training (70.379 baris)
-│   └── Notes/Sumber.txt         # Link sumber dataset Kaggle
-├── Notebook/                    # Jupyter notebooks
-│   ├── DataPreparation.ipynb    # Merge & deduplication
-│   ├── EDA.ipynb                # Exploratory data analysis
-│   ├── AdvancedPreprocessing.ipynb  # Pipeline preprocessing lanjutan
-│   ├── FeatureExtraction.ipynb  # Tokenisasi word-level & subword
-│   ├── GRU_model.ipynb          # Training BiGRU (PyTorch)
-│   ├── LSTM.ipynb               # Training BiLSTM (TensorFlow)
-│   ├── IndoBERT_focal.ipynb     # Fine-tune IndoBERT + Focal Loss
-│   └── archive/                 # Notebook lama (IndoBERT non-focal)
-├── model/                       # Model tersimpan
-│   ├── bigru/                   # bigru_model.pt + bigru_config.pt
-│   ├── indobert_judol_model/    # IndoBERT non-focal (deprecated)
-│   ├── indobert_judol_model_focal/  # IndoBERT + Focal Loss
-│   └── tokenizer_bigru.pickle
-├── deployhf/                    # Deploy Hugging Face Spaces
-│   ├── app.py                   # FastAPI endpoint /predict
-│   ├── Dockerfile               # Python 3.10-slim, port 7860
-│   └── requirements.txt
-├── extension/                   # Chrome/Edge Extension (Manifest V3)
-│   ├── manifest.json
-│   ├── background/service-worker.js   # API calls + message routing
-│   ├── content/youtube.js             # DOM observer + hide/highlight
-│   ├── content/preprocess.js          # JS preprocessing pipeline
-│   ├── popup/popup.{html,js,css}      # Settings UI
-│   ├── styles/highlight.css           # Highlight/hide CSS
-│   └── assets/                        # Icons (16/48/128px)
-├── Docs/                        # Dokumentasi
-│   ├── Desc.md                  # Ketentuan mata kuliah
-│   ├── Rencana_Proyek.md        # Rencana detail proyek
-│   ├── Rencana_Data_Preparation.md
-│   ├── EDA_Report.md            # Laporan EDA
-│   ├── Advanced_Preprocessing_Strategy.md
-│   ├── Feature_Extraction_Pipeline.md
-│   ├── Laporan_Evaluasi_Model.md  # Laporan hasil evaluasi 3 model
-│   └── sketsa_projek.png
-├── Laporan/                     # File laporan final (PDF)
-├── .gitignore
-└── README.md
-```
-
----
-
-## Deployment
+## 🚀 Deployment
 
 ### Hugging Face Spaces
-
-API berjalan di Hugging Face Spaces menggunakan FastAPI + Docker:
 
 | Komponen | Detail |
 |----------|--------|
 | **Endpoint** | `POST /predict` |
 | **Input** | `{"text": "komentar youtube"}` |
 | **Output** | `{"label": "judol"|"bukan_judol", "score": 0.98}` |
-| **Port** | 7860 (standar HF Spaces) |
+| **Port** | 7860 |
 | **Model** | IndoBERT + Focal Loss |
 
-### Browser Extension
+### Browser Extension — Panduan Instalasi
 
-1. Buka `chrome://extensions` (atau `edge://extensions`)
-2. Aktifkan **Developer Mode**
-3. Klik **Load unpacked** → pilih folder `extension/`
-4. Buka video YouTube — ekstensi otomatis memindai komentar
-5. Klik icon ekstensi untuk mengatur mode (hide/highlight), threshold, dan melihat statistik
+```bash
+# 1. Clone repository
+git clone https://github.com/jeebrielibr/NLP-Final-Project.git
+
+# 2. Buka chrome://extensions (atau edge://extensions)
+# 3. Aktifkan Developer Mode
+# 4. Klik "Load unpacked" → pilih folder extension/
+# 5. Buka video YouTube — ekstensi otomatis memindai komentar
+# 6. Klik icon ekstensi untuk atur mode, threshold, statistik
+```
 
 ---
 
-## Dokumentasi
+## 📂 Struktur Repository
+
+```
+NLP Final Project/
+├── Dataset/                    # Dataset mentah & terproses
+│   ├── datasetraw1–6.csv       # 6 dataset Kaggle
+│   ├── dataset_prepared.csv    # Merge ~70K baris
+│   ├── dataset_clean_final.csv # Final siap training (70.379 baris)
+│   └── Notes/
+├── Notebook/                   # Jupyter notebooks
+│   ├── DataPreparation.ipynb   # Merge & dedup
+│   ├── EDA.ipynb               # Exploratory data analysis
+│   ├── AdvancedPreprocessing   # Pipeline preprocessing
+│   ├── FeatureExtraction.ipynb # Tokenisasi
+│   ├── GRU_model.ipynb         # BiGRU (PyTorch)
+│   ├── LSTM.ipynb              # BiLSTM (TensorFlow)
+│   └── IndoBERT_focal.ipynb    # ✨ Best model
+├── model/
+│   ├── bigru/                  # BiGRU model
+│   └── indobert_judol_model_focal/  # 🏆 IndoBERT + Focal Loss
+├── deployhf/                   # Hugging Face Spaces
+│   ├── app.py                  # FastAPI endpoint
+│   ├── Dockerfile
+│   └── requirements.txt
+├── extension/                  # Chrome/Edge Extension
+│   ├── manifest.json           # Manifest V3
+│   ├── background/             # Service worker
+│   ├── content/                # youtube.js + preprocess.js
+│   ├── popup/                  # Settings UI
+│   └── styles/                 # Hide/highlight CSS
+├── Docs/                       # Dokumentasi
+├── Laporan/                    # Laporan final (PDF)
+├── .gitignore
+└── README.md
+```
+
+---
+
+## 📄 Dokumentasi
 
 | Dokumen | Isi |
 |---------|-----|
 | [Rencana Proyek](Docs/Rencana_Proyek.md) | Arsitektur, pipeline, evaluasi, rencana implementasi |
-| [Ketentuan Mata Kuliah](Docs/Desc.md) | Informasi kelompok, syarat, bobot penilaian |
-| [Laporan EDA](Docs/EDA_Report.md) | Analisis distribusi label, panjang teks, kata kunci |
-| [Strategi Preprocessing](Docs/Advanced_Preprocessing_Strategy.md) | Detail pipeline preprocessing lanjutan |
-| [Pipeline Feature Extraction](Docs/Feature_Extraction_Pipeline.md) | Tokenisasi word-level & subword |
-| [Laporan Evaluasi Model](Docs/Laporan_Evaluasi_Model.md) | Hasil evaluasi BiGRU, LSTM, IndoBERT-focal |
+| [Ketentuan Mata Kuliah](Docs/Desc.md) | Kelompok, syarat, bobot penilaian |
+| [Laporan EDA](Docs/EDA_Report.md) | Distribusi label, panjang teks, kata kunci |
+| [Strategi Preprocessing](Docs/Advanced_Preprocessing_Strategy.md) | Detail pipeline preprocessing |
+| [Feature Extraction](Docs/Feature_Extraction_Pipeline.md) | Tokenisasi word-level & subword |
+| [Evaluasi Model](Docs/Laporan_Evaluasi_Model.md) | Hasil BiGRU, LSTM, **IndoBERT-focal** |
 
 ---
 
-## Ketentuan Mata Kuliah
+## ✅ Deliverables
 
-Proyek ini memenuhi ketentuan final project NLP:
-
-- **Domain:** Sosial Media (YouTube)
-- **Task:** Text Classification (`judol` / `bukan_judol`)
-- **Teknologi:** BiGRU/LSTM (wajib) + IndoBERT/HuggingFace — ✅ 3 model dilatih
-- **Dataset:** ≥ 10.000 komentar berbahasa Indonesia — ✅ 70.379 baris
-- **Deploy:** Minimal Hugging Face Spaces + demo ekstensi browser — ✅ keduanya aktif
-
-Detail ketentuan dan bobot penilaian ada di [`Docs/Desc.md`](Docs/Desc.md).
-
----
-
-## Deliverables
-
-- [x] Repository kode lengkap
-- [x] Model + demo Hugging Face Spaces
-- [x] Ekstensi browser (hide + highlight)
-- [x] Laporan evaluasi model ([Docs/Laporan_Evaluasi_Model.md](Docs/Laporan_Evaluasi_Model.md))
+- [x] Repositori kode lengkap dengan pipeline preprocessing
+- [x] 3 model NLP: BiGRU, LSTM, IndoBERT + Focal Loss
+- [x] Evaluasi model: metrik, confusion matrix, error analysis
+- [x] Hugging Face Spaces API (FastAPI + Docker)
+- [x] Ekstensi Chrome/Edge (Hide + Highlight + Threshold)
 - [ ] Laporan PDF final
 - [ ] Slide presentasi
 
 ---
 
-## Lisensi
-
-Proyek akademik — Teknik Informatika, mata kuliah Natural Language Processing.
+<p align="center">
+  <sub>Proyek Akademik — Teknik Informatika · Natural Language Processing</sub>
+  <br />
+  <sub>© 2025 Kelompok Newton</sub>
+</p>
