@@ -235,8 +235,6 @@ API berjalan di Hugging Face Spaces menggunakan FastAPI + Docker:
 | **Port** | 7860 (standar HF Spaces) |
 | **Model** | IndoBERT + Focal Loss |
 
-> **Catatan:** Model yang saat ini di-deploy adalah IndoBERT-focal. Berdasarkan hasil evaluasi, disarankan untuk mengganti dengan BiGRU yang memiliki performa jauh lebih baik. Lihat [Laporan Evaluasi](Docs/Laporan_Evaluasi_Model.md).
-
 ### Browser Extension
 
 1. Buka `chrome://extensions` (atau `edge://extensions`)
