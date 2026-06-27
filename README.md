@@ -324,5 +324,5 @@ NLP Final Project/
 <p align="center">
   <sub>Proyek Akademik — Teknik Informatika · Natural Language Processing</sub>
   <br />
-  <sub>© 2025 Kelompok Newton</sub>
+  <sub>© 2026 Kelompok Newton</sub>
 </p>
