@@ -1,0 +1,44 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube Judol Comment Remover",
+  "version": "1.0.0",
+  "description": "Mendeteksi, menyembunyikan, dan menyorot komentar judi online (judol) di YouTube menggunakan model NLP IndoBERT.",
+  "permissions": [
+    "storage",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://www.youtube.com/*",
+    "*://*.youtube.com/*",
+    "https://*.huggingface.co/*",
+    "https://*.hf.space/*"
+  ],
+  "background": {
+    "service_worker": "background/service-worker.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "assets/icon16.png",
+      "48": "assets/icon48.png",
+      "128": "assets/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.youtube.com/watch*"],
+      "js": [
+        "content/preprocess.js",
+        "content/youtube.js"
+      ],
+      "css": ["styles/highlight.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "16": "assets/icon16.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
+  }
+}
