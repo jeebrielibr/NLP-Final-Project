@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Judol Remover - Bebas Komentar Judi Online di YouTube</title>
+    <!-- Google Fonts for Hand-Drawn Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@700&family=Patrick+Hand&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- DESIGN SYSTEM TOKENS & RESET --- */
+        :root {
+            --bg-paper: #fdfbf7;
+            --fg-pencil: #2d2d2d;
+            --muted-paper: #e5e0d8;
+            --accent-red: #ff4d4d;
+            --secondary-blue: #2d5da1;
+            --postit-yellow: #fff9c4;
+            
+            /* Reusable Wobbly Radii from the Design System */
+            --wobbly: 255px 15px 225px 15px / 15px 225px 15px 255px;
+            --wobbly-md: 20px 300px 15px 250px / 250px 15px 350px 20px;
+            --wobbly-lg: 315px 25px 285px 20px / 20px 275px 15px 325px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-paper);
+            /* Notebook Paper Texture Gradient */
+            background-image: radial-gradient(var(--muted-paper) 1.5px, transparent 1.5px);
+            background-size: 24px 24px;
+            color: var(--fg-pencil);
+            font-family: 'Patrick Hand', sans-serif;
+            font-size: 1.25rem;
+            line-height: 1.5;
+            padding: 0 1.5rem;
+        }
+
+        h1, h2, h3, .heading-font {
+            font-family: 'Kalam', sans-serif;
+            font-weight: 700;
+        }
+
+        /* --- LAYOUT UTILITIES --- */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 4px 0;
+        }
+
+        .section-padding {
+            padding: 4rem 0;
+        }
+
+        /* --- THE WOBBLY COMPONENTS (Matches image_3305e9.png) --- */
+        .wobbly-box {
+            background: #ffffff;
+            border: 3px solid var(--fg-pencil);
+            border-radius: var(--wobbly-md);
+            box-shadow: 5px 5px 0px 0px var(--fg-pencil);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .wobbly-box:hover {
+            transform: rotate(-0.5deg) scale(1.01);
+        }
+
+        /* Hard Offset Buttons */
+        .btn-primary {
+            display: inline-block;
+            font-family: 'Kalam', sans-serif;
+            font-size: 1.5rem;
+            background: #ffffff;
+            color: var(--fg-pencil);
+            border: 3px solid var(--fg-pencil);
+            border-radius: var(--wobbly);
+            padding: 0.75rem 2rem;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 5px 5px 0px 0px var(--fg-pencil);
+            transition: all 0.1s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-red);
+            color: white;
+            box-shadow: 2px 2px 0px 0px var(--fg-pencil);
+            transform: translate(3px, 3px);
+        }
+
+        .btn-primary:active {
+            box-shadow: 0px 0px 0px 0px var(--fg-pencil);
+            transform: translate(5px, 5px);
+        }
+
+        /* --- HERO & HEADER SECTIONS --- */
+        header {
+            text-align: center;
+            padding-top: 3rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .badge-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .badge {
+            border: 2px solid var(--fg-pencil);
+            border-radius: 12px 4px 14px 5px / 4px 12px 3px 15px;
+            padding: 0.2rem 0.6rem;
+            font-size: 0.95rem;
+            background: white;
+            font-weight: bold;
+        }
+
+        .badge.active { background: #2ea44f; color: white; }
+        .badge.bert { background: #8A2BE2; color: white; }
+        .badge.academic { background: #e5e0d8; }
+
+        .main-title {
+            font-size: 3rem;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            transform: rotate(-1deg);
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            color: #555;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* --- INTERACTIVE PREVIEW PANEL (Mimicking image_3305e9.png) --- */
+        .preview-ui {
+            max-width: 450px;
+            margin: 0 auto;
+            transform: rotate(1deg);
+        }
+
+        .ui-header {
+            text-align: center;
+            border-radius: 15px 225px 15px 255px / 255px 15px 225px 15px;
+        }
+
+        .ui-header h3 {
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .shield-icon {
+            display: inline-block;
+            width: 24px;
+            height: 28px;
+            background: var(--secondary-blue);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        }
+
+        .toggle-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+        }
+
+        .toggle-switch {
+            width: 55px;
+            height: 28px;
+            background: var(--postit-yellow);
+            border: 2px solid var(--fg-pencil);
+            border-radius: 6px;
+            position: relative;
+            padding: 2px;
+        }
+
+        .toggle-handle {
+            width: 20px;
+            height: 20px;
+            background: white;
+            border: 2px solid var(--fg-pencil);
+            border-radius: 4px;
+            position: absolute;
+            right: 4px;
+            top: 2px;
+        }
+
+        /* Mode Tampilan List Box */
+        .mode-option {
+            border: 2px solid var(--fg-pencil);
+            border-radius: 12px 15px 12px 14px;
+            padding: 0.6rem 1rem;
+            margin-top: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            position: relative;
+        }
+
+        .mode-option.selected {
+            border: 3px solid var(--accent-red);
+            background: rgba(255, 77, 77, 0.04);
+        }
+
+        .check-mark {
+            position: absolute;
+            right: 15px;
+            color: var(--accent-red);
+            font-family: 'Kalam', sans-serif;
+            font-size: 1.4rem;
+        }
+
+        /* Slider Custom Look */
+        .slider-container {
+            margin: 1rem 0;
+        }
+        .mock-slider {
+            height: 6px;
+            background: #ffffff;
+            border: 2px solid var(--fg-pencil);
+            position: relative;
+            margin: 1.5rem 0 0.5rem 0;
+        }
+        .mock-handle {
+            width: 18px;
+            height: 22px;
+            background: #fff;
+            border: 3px solid var(--fg-pencil);
+            border-radius: 4px;
+            position: absolute;
+            left: 20%;
+            top: -10px;
+        }
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1rem;
+            color: #666;
+        }
+        .slider-val {
+            font-family: 'Kalam', sans-serif;
+            color: var(--accent-red);
+            font-size: 1.5rem;
+            position: absolute;
+            right: 15px;
+            top: 30px;
+        }
+
+        /* Stats Row */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .stat-card {
+            border: 3px solid var(--fg-pencil);
+            border-radius: var(--wobbly);
+            padding: 0.5rem;
+            text-align: center;
+            color: white;
+        }
+        .stat-card.red {
+            background: var(--accent-red);
+        }
+        .stat-card.blue {
+            background: var(--secondary-blue);
+        }
+        .stat-num {
+            font-family: 'Kalam', sans-serif;
+            font-size: 2.2rem;
+            line-height: 1;
+        }
+
+        /* --- FEATURES & DETAILS SECTIONS --- */
+        .grid-features {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        @media (min-width: 768px) {
+            .grid-features {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* Sticky Tape Decoration Effect */
+        .tape-decor::after {
+            content: "";
+            position: absolute;
+            top: -12px;
+            left: 35%;
+            width: 30%;
+            height: 24px;
+            background: rgba(229, 224, 216, 0.7);
+            transform: rotate(-2deg);
+            border-left: 2px dashed rgba(0,0,0,0.1);
+            border-right: 2px dashed rgba(0,0,0,0.1);
+        }
+
+        .postit {
+            background-color: var(--postit-yellow) !important;
+            transform: rotate(-1deg);
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding: 2rem 0;
+            border-top: 3px dashed var(--fg-pencil);
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- --- HEADER & REPO METRICS --- -->
+        <header>
+            <div class="badge-container">
+                <span class="badge active">status: active</span>
+                <span class="badge bert">IndoBERT-focal 99.64%</span>
+                <span class="badge academic">Academic License</span>
+                <span class="badge">Chrome Extension MV3</span>
+            </div>
+            <h1 class="main-title">🎯 YouTube Judol Comment Remover</h1>
+            <p class="subtitle">Ekstensi browser berbasis NLP cerdas untuk mendeteksi, menyembunyikan, dan menyorot komentar judi online secara otomatis.</p>
+        </header>
+
+        <!-- --- LIVE INTERACTIVE LOOK (Direct Reference to image_3305e9.png) --- -->
+        <section class="container">
+            <div class="preview-ui">
+                
+                <!-- Box Title -->
+                <div class="wobbly-box ui-header">
+                    <h3><span class="shield-icon"></span> Judol Remover</h3>
+                    <p style="font-size: 1.05rem; color:#444;">Deteksi komentar judi online di YouTube</p>
+                </div>
+
+                <!-- Box Switch -->
+                <div class="wobbly-box toggle-row">
+                    <span>Aktifkan Ekstensi</span>
+                    <div class="toggle-switch">
+                        <div class="toggle-handle"></div>
+                    </div>
+                </div>
+
+                <!-- Box Mode Tampilan -->
+                <div class="wobbly-box">
+                    <p class="heading-font" style="font-size: 1.3rem;">⚙️ Mode Tampilan</p>
+                    
+                    <div class="mode-option selected">
+                        <span>🔍</span>
+                        <div>
+                            <strong>Highlight</strong><br>
+                            <span style="font-size: 0.95rem; color:#555;">Tandai komentar judol</span>
+                        </div>
+                        <span class="check-mark">✓</span>
+                    </div>
+
+                    <div class="mode-option">
+                        <span>👁️</span>
+                        <div>
+                            <strong>Hide</strong><br>
+                            <span style="font-size: 0.95rem; color:#555;">Sembunyikan komentar</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Box Confidence Threshold -->
+                <div class="wobbly-box" style="position: relative;">
+                    <p class="heading-font" style="font-size: 1.3rem;">🎯 Confidence Threshold</p>
+                    <div class="mock-slider">
+                        <div class="mock-handle"></div>
+                    </div>
+                    <div class="slider-labels">
+                        <span>0.5</span>
+                    </div>
+                    <span class="slider-val">0.5</span>
+                    <p style="font-size: 0.95rem; color:#666; text-align: center; margin-top: 0.5rem;">Makin tinggi = makin yakin baru ditandai</p>
+                </div>
+
+                <!-- API Status Box -->
+                <div class="wobbly-box" style="padding: 0.6rem 1.2rem; border-radius: 8px;">
+                    <span style="color:#2ea44f;">🟩</span> API tersedia
+                </div>
+
+                <!-- Session Stats Box -->
+                <div class="wobbly-box">
+                    <p class="heading-font" style="font-size: 1.3rem;">📊 Statistik Sesi</p>
+                    <div class="stats-grid">
+                        <div class="stat-card red">
+                            <div class="stat-num">8</div>
+                            <div style="font-size:0.95rem">Judol</div>
+                        </div>
+                        <div class="stat-card blue">
+                            <div class="stat-num">2718</div>
+                            <div style="font-size:0.95rem">Diperiksa</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- --- CTA BUTTON --- -->
+        <section style="text-align: center; margin: 3.5rem 0;">
+            <p style="margin-bottom: 1rem; font-weight: bold;">Siap membersihkan beranda YouTube Anda?</p>
+            <a href="https://github.com/jeebrielibr/NLP-Final-Project" target="_blank" class="btn-primary">⚡ Pasang Ekstensi (Clone GitHub)</a>
+        </section>
+
+        <!-- --- FEATURES & INSIGHTS --- -->
+        <section class="section-padding">
+            <h2 class="heading-font" style="font-size: 2.2rem; text-align: center; margin-bottom: 2rem; transform: rotate(-0.5deg);">💡 Mengapa Memilih Judol Remover?</h2>
+            
+            <div class="grid-features">
+                <div class="wobbly-box tape-decor">
+                    <h3 class="heading-font">🥇 Akurasi Unggul IndoBERT</h3>
+                    <p>Dilatih menggunakan arsitektur **IndoBERT + Focal Loss** pada **70.379 dataset komentar**, menghasilkan akurasi mengagumkan sebesar **99,64%** untuk menangani variasi typo, slang, dan emoji tersamar.</p>
+                </div>
+
+                <div class="wobbly-box tape-decor postit">
+                    <h3 class="heading-font">⚡ Ringan & Real-time</h3>
+                    <p>Menggunakan backend inferensi cepat FastAPI yang terintegrasi langsung dengan content script `MutationObserver` pada YouTube DOM secara instan tanpa memperlambat browser Anda.</p>
+                </div>
+
+                <div class="wobbly-box">
+                    <h3 class="heading-font">🛠️ Kontrol Penuh di Tangan Anda</h3>
+                    <p>Atur ambang batas keyakinan (*threshold filtering*) dari 0.50 hingga 0.95 sesuai keinginan Anda, serta beralih antara menyembunyikan (*hide*) secara bersih atau menyorot (*highlight*) untuk evaluasi.</p>
+                </div>
+
+                <div class="wobbly-box">
+                    <h3 class="heading-font">🔒 Aman & Transparan</h3>
+                    <p>Ekstensi mematuhi arsitektur modern Google Chrome **Manifest V3**. Kode sumber sepenuhnya open-source, menjamin privasi data penjelajahan Anda tetap aman tanpa tracking tersembunyi.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- --- FOOTER --- -->
+        <footer>
+            <p>Proyek Akademik — Teknik Informatika · Natural Language Processing</p>
+            <p style="margin-top: 0.5rem; font-family: 'Kalam', sans-serif; font-size: 1.2rem; color: var(--secondary-blue);">© 2026 Kelompok Newton</p>
+        </footer>
+    </div>
+
+</body>
+</html>
