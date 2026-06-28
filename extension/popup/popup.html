@@ -2,81 +2,103 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>YouTube Judol Comment Remover</title>
+  <title>Judol Remover</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@700&family=Patrick+Hand&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>🛡️ Judol Remover</h1>
-      <p class="subtitle">Deteksi komentar judi online di YouTube</p>
+  <div class="sketchbook">
+
+    <!-- Tape decoration -->
+    <div class="tape" aria-hidden="true"></div>
+
+    <!-- Header -->
+    <header class="section header-section">
+      <h1 class="header-title">🛡️ Judol Remover</h1>
+      <p class="header-sub">Deteksi komentar judi <span class="squiggle">online</span> di YouTube</p>
     </header>
 
-    <!-- Master enable/disable -->
-    <section class="section">
+    <!-- Enable toggle -->
+    <div class="section toggle-section">
       <div class="toggle-row">
-        <label for="enabled">Aktifkan Ekstensi</label>
-        <input type="checkbox" id="enabled" class="toggle-switch">
+        <label class="toggle-label" for="enabled">Aktifkan Ekstensi</label>
+        <div class="toggle-track">
+          <input type="checkbox" id="enabled" checked>
+          <span class="toggle-knob"></span>
+        </div>
       </div>
-    </section>
+    </div>
 
     <!-- Mode selection -->
-    <section class="section">
-      <h2>Mode Tampilan</h2>
+    <div class="section mode-section">
+      <h2 class="section-heading">⚙️ Mode Tampilan</h2>
       <div class="mode-group">
-        <label class="mode-option">
-          <input type="radio" name="mode" value="highlight" id="mode-highlight">
-          <span class="mode-label">
-            <span class="mode-icon">🔍</span> Highlight
+        <label class="mode-card" data-mode="highlight">
+          <input type="radio" name="mode" value="highlight" checked>
+          <span class="mode-icon-text">🔍</span>
+          <span class="mode-info">
+            <span class="mode-name">Highlight</span>
+            <span class="mode-desc">Tandai komentar judol</span>
           </span>
-          <span class="mode-desc">Tandai komentar judol dengan border + label</span>
+          <span class="mode-check" aria-hidden="true">✓</span>
         </label>
-        <label class="mode-option">
-          <input type="radio" name="mode" value="hide" id="mode-hide">
-          <span class="mode-label">
-            <span class="mode-icon">👁️‍🗨️</span> Hide
+        <label class="mode-card" data-mode="hide">
+          <input type="radio" name="mode" value="hide">
+          <span class="mode-icon-text">👁️</span>
+          <span class="mode-info">
+            <span class="mode-name">Hide</span>
+            <span class="mode-desc">Sembunyikan komentar</span>
           </span>
-          <span class="mode-desc">Sembunyikan komentar judol sepenuhnya</span>
+          <span class="mode-check" aria-hidden="true">✓</span>
         </label>
       </div>
-    </section>
+    </div>
 
     <!-- Threshold -->
-    <section class="section">
-      <h2>Confidence Threshold</h2>
-      <div class="threshold-row">
-        <input type="range" id="threshold" min="0.50" max="0.95" step="0.05" value="0.70">
-        <span id="threshold-value">0.70</span>
+    <div class="section threshold-section">
+      <h2 class="section-heading">🎯 Confidence Threshold</h2>
+      <div class="slider-row">
+        <span class="slider-min">0.5</span>
+        <div class="slider-wrap">
+          <input type="range" id="threshold" min="0.50" max="0.95" step="0.05" value="0.70">
+          <div class="slider-marks" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+        <span class="slider-value" id="threshold-value">0.70</span>
       </div>
-      <p class="threshold-hint">Semakin tinggi = hanya prediksi yang lebih pasti ditandai</p>
-    </section>
+      <p class="hint">Makin tinggi = makin yakin baru ditandai</p>
+    </div>
 
     <!-- API Status -->
-    <section class="section">
+    <div class="section status-section">
       <div class="status-row">
         <span class="status-dot" id="api-status-dot"></span>
-        <span id="api-status-text">Memeriksa API...</span>
+        <span class="status-text" id="api-status-text">Memeriksa API...</span>
       </div>
-    </section>
+    </div>
 
-    <!-- Session Stats -->
-    <section class="section stats">
-      <h2>Statistik Sesi</h2>
-      <div class="stats-grid">
-        <div class="stat-item">
-          <span class="stat-number" id="judol-count">0</span>
-          <span class="stat-label">Judol Terdeteksi</span>
+    <!-- Stats -->
+    <div class="section stats-section">
+      <h2 class="section-heading">📊 Statistik Sesi</h2>
+      <div class="stats-row">
+        <div class="stat-card stat-judol">
+          <span class="stat-num" id="judol-count">0</span>
+          <span class="stat-lbl">Judol</span>
         </div>
-        <div class="stat-item">
-          <span class="stat-number" id="total-count">0</span>
-          <span class="stat-label">Total Diperiksa</span>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat-card stat-total">
+          <span class="stat-num" id="total-count">0</span>
+          <span class="stat-lbl">Diperiksa</span>
         </div>
       </div>
-    </section>
+    </div>
 
     <!-- Footer -->
-    <footer>
-      <p class="version">v1.0.0 · Kelompok Newton · NLP Final Project</p>
+    <footer class="footer">
+      <span class="footer-text">v1.0.0 · Newton · NLP</span>
     </footer>
   </div>
 
