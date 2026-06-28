@@ -5,8 +5,8 @@
 
 // --- DOM refs ---
 const enabledCheckbox = document.getElementById('enabled');
-const modeHighlight = document.getElementById('mode-highlight');
-const modeHide = document.getElementById('mode-hide');
+const modeHighlight = document.querySelector('input[name="mode"][value="highlight"]');
+const modeHide = document.querySelector('input[name="mode"][value="hide"]');
 const thresholdSlider = document.getElementById('threshold');
 const thresholdValue = document.getElementById('threshold-value');
 const apiStatusDot = document.getElementById('api-status-dot');
