@@ -165,7 +165,7 @@ flowchart LR
 | **Unicode** | 𝘀𝗶𝘁𝘂𝘀 | `situs` |
 | **URL** | `bit.ly/judi` | `[URL]` |
 | **Slang** | `wd`, `depo` | `withdraw`, `deposit` |
-| **Repetisi** | `bngettt` | `bngett` |
+| **Repetisi** | `bngettt` | `banget` |
 
 ---
 
@@ -239,21 +239,21 @@ Tiga model dilatih pada **70.379 komentar** berbahasa Indonesia. Detail lengkap 
 |----------|--------|
 | **Endpoint** | `POST /predict` |
 | **Input** | `{"text": "komentar youtube"}` |
-| **Output** | `{"label": "judol"|"bukan_judol", "score": 0.98}` |
+| **Output** | `{"label": "judol", "bukan_judol"}` |
 | **Port** | 7860 |
 | **Model** | IndoBERT + Focal Loss |
 
 ### Browser Extension — Panduan Instalasi
 
 ```bash
-# 1. Clone repository
+1. Clone repository
 git clone https://github.com/jeebrielibr/NLP-Final-Project.git
 
-# 2. Buka chrome://extensions (atau edge://extensions)
-# 3. Aktifkan Developer Mode
-# 4. Klik "Load unpacked" → pilih folder extension/
-# 5. Buka video YouTube — ekstensi otomatis memindai komentar
-# 6. Klik icon ekstensi untuk atur mode, threshold, statistik
+2. Buka chrome://extensions (atau edge://extensions)
+3. Aktifkan Developer Mode
+4. Klik "Load unpacked" → pilih folder extension/
+5. Buka video YouTube — ekstensi otomatis memindai komentar
+6. Klik icon ekstensi untuk atur mode, threshold, statistik
 ```
 
 ---
@@ -316,8 +316,8 @@ NLP Final Project/
 - [x] Evaluasi model: metrik, confusion matrix, error analysis
 - [x] Hugging Face Spaces API (FastAPI + Docker)
 - [x] Ekstensi Chrome/Edge (Hide + Highlight + Threshold)
-- [ ] Laporan PDF final
-- [ ] Slide presentasi
+- [X] Laporan PDF final
+- [X] Slide presentasi
 
 ---
 
